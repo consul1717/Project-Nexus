@@ -66,7 +66,7 @@ class CanaryHandler(BaseHTTPRequestHandler):
             message = "Not found\n"
             status = 404
         else:
-            message = "Tripwire deployed\n"
+            message = "Systems operational\n"
             status = 200
 
         body = message.encode("utf-8")
