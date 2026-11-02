@@ -49,7 +49,6 @@ class CanaryServer(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"Not Found")
     def log_message(self, format, *args):
-        # Suppress default request logs; relevant events are recorded by alert().
         pass
 
 FILE.parent.mkdir(parents=True, exist_ok=True)
