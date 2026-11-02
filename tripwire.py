@@ -50,32 +50,50 @@ def watch_file():
         record_event("file_tripwire", file=str(DECOY_FILE.relative_to(ROOT)), change=change)
         previous = digest
 
-class CanaryHandler(BaseHTTPRequestHandler):
+class Handler(BaseHTTPRequestHandler):
+    server_version = "ProjectNexus/1.2"
+    sys_version = ""
+
     def log_message(self, format, *args):
-        # Don't print raw, possibly untrusted request text in our terminal.
+        # Disable logging of request paths/headers to terminal.
         pass
 
     def do_GET(self):
+        self.handle_request(send_body=True)
+
+    def do_HEAD(self):
+        self.handle_request(send_body=False)
+
+    def do_POST(self):
+        self.handle_request(send_body=True)
+
+    def handle_request(self, send_body):
         route = urlsplit(self.path).path
         if route == CANARY_PATH:
             record_event(
-                "digital_tripwire",
+                "project_nexus",
                 source_ip=self.client_address[0],
+                method=self.command,
                 path=route,
+                user_agent=self.headers.get("User-Agent", "")[:160],
             )
-            message = "Error. Not found\n"
-            status = 404
+            self.reply(404, "Not Found\n", send_body)
+        elif route == "/health":
+            self.reply(200, "OK\n", send_body)
+        elif route == "/":
+            self.reply(200, "Project Nexus is running.\n", send_body)
         else:
-            message = "Systems operational\n"
-            status = 200
+            self.reply(404, "Not Found\n", send_body)
 
+    def reply(self, status, message, send_body):
         body = message.encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "text/plain; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
-        self.wfile.write(body)
+        if send_body:
+            self.wfile.write(body)
 
 def main():
     DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -84,7 +102,7 @@ def main():
 
     threading.Thread(target=watch_file, daemon=True).start()
 
-    server = ThreadingHTTPServer(("127.0.0.1", 8088), CanaryHandler)
+    server = ThreadingHTTPServer(("127.0.0.1", 8088), Handler)
     print("Watching the decoy file, listening on http://127.0.0.1:8088",)
     print(f"Canary path: http://127.0.0.1:8088{CANARY_PATH}")
     print(f"Events go into: {EVENT_FILE}")
