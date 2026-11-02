@@ -28,29 +28,27 @@ def record_event(event_type: str, **details):
             stream.write(json.dumps(event, ensure_ascii=True) + "\n")
     print(f"[ALERT] {event['timestamp']} {event_type}", flush=True)
 
-def fingerprint():
+def current_digest():
     try:
         return hashlib.sha256(DECOY_FILE.read_bytes()).hexdigest()
     except FileNotFoundError:
         return None
 
 def watch_file():
-    old_fingerprint = fingerprint()
+    previous = current_digest()
     while True:
-        time.sleep(CHECK_EVERY_SECONDS)
-        new_fingerprint = fingerprint()
-        if new_fingerprint == old_fingerprint:
+        time.sleep(POLL_SECONDS)
+        digest = current_digest()
+        if digest == previous:
             continue
-
-        if new_fingerprint is None:
-            change = "deleted"
-        elif old_fingerprint is None:
+        if previous is None:
             change = "created"
+        elif digest is None:
+            change = "deleted"
         else:
             change = "modified"
-
-        record_event("file_tripwire", file=DECOY_FILE.name, change=change)
-        old_fingerprint = new_fingerprint
+        record_event("file_tripwire", file=str(DECOY_FILE.relative_to(ROOT)), change=change)
+        previous = digest
 
 class CanaryHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
