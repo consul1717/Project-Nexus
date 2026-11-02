@@ -6,7 +6,7 @@
 
 ## Features
 ### 1. File Integrity Monitor
-##### - Monitors a decoy text file for changes
+###### - Monitors a decoy text file for changes
 ##### - Uses SHA-256 hashing to check file modified state
 ##### - Recursive check every second
 ##### - Creates an alert upon change detection
