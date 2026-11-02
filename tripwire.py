@@ -17,7 +17,7 @@ CANARY_PATH = "/internal/network-backup.txt"
 CHECK_EVERY_SECONDS = 1
 LOCK = threading.Lock()
 
-def record_event(event_type, **details):
+def record_event(event_type: str, **details):
     event = {
         "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "event_type": event_type,
