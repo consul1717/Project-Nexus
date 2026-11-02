@@ -11,9 +11,9 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
-DECOY_FILE = ROOT / "decoys" / "nexus-decoy.txt"
+DECOY_FILE = ROOT / "decoys" / "nexus-test-file.txt"
 EVENT_FILE = ROOT / "events.json1"
-CANARY_PATH = "/internal/nexus-decoy.txt"
+CANARY_PATH = "/internal/nexus-test-file.txt"
 POLL_SECONDS = 1.0
 WRITE_LOCK = threading.Lock()
 
@@ -104,7 +104,12 @@ def main():
     DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not DECOY_FILE.exists():
         DECOY_FILE.write_text(
-            "lorem ipsum dolor sit amet consectetur adipiscing elit temporibus qui culpa in non est libero autem labore libero lorem ducimus sunt nulla nisi dolor minus harum incididunt praesentium officia sed commodo nisi fugiat aute provident deserunt id in est occaecat omnis possimus consectetur in occaecat ea deleniti dolorum aliquip quas.\n",
+            "***************************************************************************\n"
+            "NOTICE: This is a restricted private network system.\n"
+            "Authorized personnel only. All activities are monitored and recorded.\n"
+            "Node: core-switch-01.infrastructure.local\n"
+            "OS: Custom Embedded Linux v4.19.0-core\n"
+            "***************************************************************************\n",
             encoding="utf-8",
         )
     threading.Thread(target=watch_file, daemon=True).start()
