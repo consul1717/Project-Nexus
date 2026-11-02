@@ -11,9 +11,9 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
-DECOY_FILE = ROOT / "decoys" / "network-backup.txt"
+DECOY_FILE = ROOT / "decoys" / "nexus-decoy.txt"
 EVENT_FILE = ROOT / "events.json1"
-CANARY_PATH = "/internal/network-backup.txt"
+CANARY_PATH = "/internal/nexus-decoy.txt"
 POLL_SECONDS = 1.0
 WRITE_LOCK = threading.Lock()
 
@@ -23,9 +23,8 @@ def record_event(event_type: str, **details):
         "event_type": event_type,
         **details,
     }
-    with WRITE_LOCK: 
-        with EVENT_FILE.open("a", encoding="utf-8") as stream:
-            stream.write(json.dumps(event, ensure_ascii=True) + "\n")
+    with WRITE_LOCK, EVENT_FILE.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(event, ensure_ascii=True) + "\n")
     print(f"[ALERT] {event['timestamp']} {event_type}", flush=True)
 
 def current_digest():
