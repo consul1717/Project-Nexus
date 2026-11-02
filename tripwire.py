@@ -82,5 +82,18 @@ def main():
     if not DECOY_FILE.exists():
         DECOY_FILE.write_text("Test.\n", encoding="utf-8")
 
+    threading.Thread(target=watch_file, daemon=True).start()
+
+    server = ThreadingHTTPServer(("127.0.0.1", 8088), CanaryHandler)
+    print("Watching the decoy file, listening on http://127.0.0.1:8088",)
+    print(f"Canary path: http:// http://127.0.0.1:8088{CANARY_PATH}")
+    print(f"Events go into: {EVENT_FILE}")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\nStopping.")
+    finally:
+        server.server_close()
+
 if __name__ == "__main__":
     main()
