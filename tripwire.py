@@ -51,6 +51,32 @@ def watch_file():
         record_event("file_tripwire", file=DECOY_FILE.name, change=change)
         old_fingerprint = new_fingerprint
 
+class CanaryHandler(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass
+
+    def do_GET(self):
+        route = urlsplit(self.path).path
+        if route == CANARY_PATH:
+            record_event(
+                "digital_tripwire",
+                source_ip=self.client_address[0],
+                path=route,
+            )
+            message = "Not found\n"
+            status = 404
+        else:
+            message = "Tripwire deployed\n"
+            status = 200
+
+        body = message.encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
 def main():
     DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not DECOY_FILE.exists():
