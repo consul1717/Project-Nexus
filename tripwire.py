@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent
 DECOY_FILE = ROOT / "decoys" / "network-backup.txt"
 EVENT_FILE = ROOT / "events.json1"
 CANARY_PATH = "/internal/network-backup.txt"
-CHECK_EVERY_SECONDS = 1
+POLL_SECONDS = 1.0
 LOCK = threading.Lock()
 
 def record_event(event_type: str, **details):
@@ -104,7 +104,7 @@ def main():
     DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not DECOY_FILE.exists():
         DECOY_FILE.write_text(
-            "DECOY BACKUP NOTES - synthetic data only. No real credentials.\n",
+            "lorem ipsum dolor sit amet consectetur adipiscing elit temporibus qui culpa in non est libero autem labore libero lorem ducimus sunt nulla nisi dolor minus harum incididunt praesentium officia sed commodo nisi fugiat aute provident deserunt id in est occaecat omnis possimus consectetur in occaecat ea deleniti dolorum aliquip quas.\n",
             encoding="utf-8",
         )
     threading.Thread(target=watch_file, daemon=True).start()
