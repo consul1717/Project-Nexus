@@ -23,8 +23,9 @@ def record_event(event_type: str, **details):
         "event_type": event_type,
         **details,
     }
-    with LOCK, EVENT_FILE.open("a", encoding="utf-8") as file:
-        file.write(json.dumps(event) + "\n")
+    with WRITE_LOCK: 
+        with EVENT_FILE.open("a", encoding="utf-8") as stream:
+            stream.write(json.dumps(event, ensure_ascii=True) + "\n")
     print(f"[ALERT] {event['timestamp']} {event_type}", flush=True)
 
 def fingerprint():
