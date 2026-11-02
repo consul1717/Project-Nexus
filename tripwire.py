@@ -22,9 +22,8 @@ def record_event(event_type, **details):
         "event_type": event_type,
         **details,
     }
-    with LOCK:
-        with EVENT_FILE.open("a", encoding="utf-8") as file:
-            file.write(json.dumps(event) + "\n")
+    with LOCK, EVENT_FILE.open("a", encoding="utf-8") as file:
+        file.write(json.dumps(event) + "\n")
     print(f"[ALERT] {event['timestamp']} {event_type}", flush=True)
 
 def fingerprint():
@@ -53,6 +52,7 @@ def watch_file():
 
 class CanaryHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
+        # Don't print raw, possibly untrusted request text in our terminal.
         pass
 
     def do_GET(self):
@@ -86,7 +86,7 @@ def main():
 
     server = ThreadingHTTPServer(("127.0.0.1", 8088), CanaryHandler)
     print("Watching the decoy file, listening on http://127.0.0.1:8088",)
-    print(f"Canary path: http:// http://127.0.0.1:8088{CANARY_PATH}")
+    print(f"Canary path: http://127.0.0.1:8088{CANARY_PATH}")
     print(f"Events go into: {EVENT_FILE}")
     try:
         server.serve_forever()
