@@ -9,7 +9,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 FOLDER = Path(__file__).resolve().parent
-FILE = FOLDER / "decoys" / "nexus-test-file.txt"
+FILE = FOLDER / "nexus-decoys" / "nexus-test-file.txt"
 LOG_FILE = FOLDER / "nexus-events.json"
 CANARY_URL = "/internal/nexus-test-file.txt"
 PORT = 8088
