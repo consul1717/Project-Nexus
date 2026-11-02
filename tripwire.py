@@ -1,7 +1,13 @@
+#!/usr/bin/env python3
+
 import hashlib
+import json
+import threading
 import time
-from datetime import datetime
+from datetime import datetime, timezone
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 DECOY_FILE = ROOT / "decoys" / "network-backup.txt"
