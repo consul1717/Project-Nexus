@@ -16,6 +16,17 @@ CANARY_PATH = "/internal/network-backup.txt"
 CHECK_EVERY_SECONDS = 1
 LOCK = threading.Lock()
 
+def record_event(event_type, **details):
+    event = {
+        "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "event_type": event_type,
+        **details,
+    }
+    with LOCK:
+        with EVENT_FILE.open("a", encoding="utf-8") as file:
+            file.write(json.dumps(event) + "\n")
+    print(f"[ALERT] {event['timestamp']} {event_type}", flush=True)
+
 def fingerprint():
     try:
         return hashlib.sha256(DECOY_FILE.read_bytes()).hexdigest()
