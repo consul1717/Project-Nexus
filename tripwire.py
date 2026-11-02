@@ -15,7 +15,7 @@ DECOY_FILE = ROOT / "decoys" / "network-backup.txt"
 EVENT_FILE = ROOT / "events.json1"
 CANARY_PATH = "/internal/network-backup.txt"
 POLL_SECONDS = 1.0
-LOCK = threading.Lock()
+WRITE_LOCK = threading.Lock()
 
 def record_event(event_type: str, **details):
     event = {
