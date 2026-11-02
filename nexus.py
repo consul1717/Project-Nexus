@@ -109,7 +109,8 @@ def main():
             "Authorized personnel only. All activities are monitored and recorded.\n"
             "Node: core-switch-01.infrastructure.local\n"
             "OS: Custom Embedded Linux v4.19.0-core\n"
-            "***************************************************************************\n",
+            "***************************************************************************\n"
+            "login: .\n",
             encoding="utf-8",
         )
     threading.Thread(target=watch_file, daemon=True).start()
