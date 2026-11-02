@@ -6,19 +6,19 @@
 
 ## Features
 ### 1. File Integrity Monitor
-#### - Monitors a decoy text file for changes
-#### - Uses SHA-256 hashing to check file modified state
-#### - Recursive check every second
-#### - Creates an alert upon change detection
+##### - Monitors a decoy text file for changes
+##### - Uses SHA-256 hashing to check file modified state
+##### - Recursive check every second
+##### - Creates an alert upon change detection
 ### 2. Network Canary
-#### - Hosts fake webpage using Python's built-in HTTP server
-#### - Detects decoy URL visits
-#### - Records visitor's IP address
-#### - Returns 404 response without exposing real file
+##### - Hosts fake webpage using Python's built-in HTTP server
+##### - Detects decoy URL visits
+##### - Records visitor's IP address
+##### - Returns 404 response without exposing real file
 ### 3. Alert Logging
-#### - Displays terminal alerts
-#### - Saves events to nexus-events.json
-#### - Records time, event type and revelant info
+##### - Displays terminal alerts
+##### - Saves events to nexus-events.json
+##### - Records time, event type and revelant info
 
 
 ### Run: nexus.py
