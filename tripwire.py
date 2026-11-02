@@ -96,20 +96,30 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
 
 def main():
+    parser = argparse.ArgumentParser(description="Tripwire for Project Nexus.")
+    parser.add_argument("--host", default="127.0.0.1", help="IP to listen on (default: localhost)")
+    parser.add_argument("--port", type=int, default=8088, help="Port (default: 8088)")
+    args = parser.parse_args()
+
     DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not DECOY_FILE.exists():
-        DECOY_FILE.write_text("Test.\n", encoding="utf-8")
-
+        DECOY_FILE.write_text(
+            "DECOY BACKUP NOTES - synthetic data only. No real credentials.\n",
+            encoding="utf-8",
+        )
     threading.Thread(target=watch_file, daemon=True).start()
 
-    server = ThreadingHTTPServer(("127.0.0.1", 8088), Handler)
-    print("Watching the decoy file, listening on http://127.0.0.1:8088",)
-    print(f"Canary path: http://127.0.0.1:8088{CANARY_PATH}")
-    print(f"Events go into: {EVENT_FILE}")
+    if args.host != "127.0.0.1" and args.port != "::1":
+        print("WARNING: Use a trusted isolated lab/LAN only. Do not port forward.")
+    server = ThreadingHTTPServer((args.host, args.port), Handler)
+    print(f"Project Nexus tripwire listening on {args.host}:{args.port}")
+    print(f"Project Nexus URL: http://{args.host}:{args.port}{CANARY_PATH}")
+    print(f"Watching {DECOY_FILE}")
+    print(f"Events: {EVENT_FILE}")
     try:
-        server.serve_forever()
+        server.serve_forever(poll_interval=0.2)
     except KeyboardInterrupt:
-        print("\nStopping.")
+        print("\nSession terminated.")
     finally:
         server.server_close()
 
