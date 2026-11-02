@@ -17,7 +17,7 @@ def fingerprint():
 def main():
     DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not DECOY_FILE.exists():
-        DECOY_FILE.write_text("Demo backup notes.\n", encoding="utf-8")
+        DECOY_FILE.write_text("Test.\n", encoding="utf-8")
 
     old_fingerprint = fingerprint()
     print(f"Tripwire deployed: {DECOY_FILE}")
