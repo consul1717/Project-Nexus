@@ -18,10 +18,9 @@ LOCK = threading.Lock()
 
 def fingerprint():
     try:
-        contents = DECOY_FILE.read_bytes()
+        return hashlib.sha256(DECOY_FILE.read_bytes()).hexdigest()
     except FileNotFoundError:
         return None
-    return hashlib.sha256(contents).hexdigest()
 
 def main():
     DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
