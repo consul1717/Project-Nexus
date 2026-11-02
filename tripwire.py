@@ -13,3 +13,12 @@ def fingerprint():
     except FileNotFoundError:
         return None
     return hashlib.sha256(contents).hexdigest()
+
+def main():
+    DECOY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    if not DECOY_FILE.exists():
+        DECOY_FILE.write_text("Demo backup notes.\n", encoding="utf-8")
+
+    old_fingerprint = fingerprint()
+    print(f"Watching: {DECOY_FILE}")
+    print("Change or delete the file.")
