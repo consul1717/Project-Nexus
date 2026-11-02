@@ -41,3 +41,6 @@ def main():
                 old_fingerprint = new_fingerprint
     except KeyboardInterrupt:
         print("\nExiting tripwire.")
+
+if __name__ == "__main__":
+    main()
