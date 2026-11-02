@@ -63,7 +63,7 @@ class CanaryHandler(BaseHTTPRequestHandler):
                 source_ip=self.client_address[0],
                 path=route,
             )
-            message = "Not found\n"
+            message = "Error. Not found\n"
             status = 404
         else:
             message = "Systems operational\n"
