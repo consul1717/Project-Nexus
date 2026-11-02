@@ -47,7 +47,7 @@ class CanaryServer(BaseHTTPRequestHandler):
             alert("Nexus URL Visited", self.client_address[0])
         self.send_response(404)
         self.end_headers()
-        self.wfile.write(b"Not Found")
+        self.wfile.write(b"Error 404: Not Found")
     def log_message(self, format, *args):
         pass
 
