@@ -11,7 +11,10 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 DECOY_FILE = ROOT / "decoys" / "network-backup.txt"
+EVENT_FILE = ROOT / "events.json1"
+CANARY_PATH = "/internal/network-backup.txt"
 CHECK_EVERY_SECONDS = 1
+LOCK = threading.Lock()
 
 def fingerprint():
     try:
